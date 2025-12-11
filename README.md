@@ -1,4 +1,4 @@
-# **Network and Firewall Configuration**
+# **Network & Firewall Configuration (UFW)**
 
 [![Linux](https://img.shields.io/badge/OS-Linux-blue?logo=linux)](https://www.linux.org/)
 [![UFW](https://img.shields.io/badge/Firewall-UFW-blueviolet)](https://wiki.ubuntu.com/UncomplicatedFirewall)
@@ -9,216 +9,238 @@
 
 ---
 
-## **Project Overview**
+## <span style="color:#2b6cb0">Executive Summary</span>
 
-This project demonstrates the configuration and management of the **Uncomplicated Firewall (UFW)** in a Linux environment to secure system traffic.  
-
-As a **junior system administrator**, I configured default firewall policies, allowed specific ports and services, enabled logging, and tested connectivity to verify network security posture.  
-
-The lab highlights how **UFW** simplifies firewall administration by allowing and denying traffic through readable commands and demonstrates understanding of **IPv4 vs IPv6** rule management, **ICMP traffic**, and **firewall logging** for visibility.
+> This project demonstrates secure network configuration and firewall management on a Linux host using **UFW (Uncomplicated Firewall)**.  
+> It showcases foundational firewall concepts—default policies, rule creation, IPv4/IPv6 management, ICMP behavior, logging, and troubleshooting—mirroring real-world junior sysadmin and security operations responsibilities.
 
 ---
 
-## **Objectives**
-1. Understand the purpose and functionality of the **Linux Uncomplicated Firewall (UFW)**.  
-2. Gain hands-on experience installing, enabling, and managing UFW.  
-3. Configure default rules to control network traffic effectively.  
-4. Enable logging to monitor firewall activity.  
-5. Verify rule functionality through testing and troubleshooting.
+## Table of Contents
+
+- [Project Overview](#project-overview)
+- [Why This Project Matters](#why-this-project-matters)
+- [Technologies Used](#technologies-used)
+- [Objectives](#objectives)
+- [Key Achievements](#key-achievements)
+- [Skills Demonstrated](#skills-demonstrated)
+- [Firewall Configuration Walkthrough](#firewall-configuration-walkthrough)
+  - [Step 1: Verify Firewall Status](#step-1-verify-firewall-status)
+  - [Step 2: Configure Default Policies](#step-2-configure-default-policies)
+  - [Step 3: Allow Specific Services](#step-3-allow-specific-services)
+  - [Step 4: Verify Connectivity](#step-4-verify-connectivity)
+  - [Step 5: Enable Firewall Logging](#step-5-enable-firewall-logging)
+  - [Step 6: Verify Final Configuration](#step-6-verify-final-configuration)
+  - [Step 7: Manage Rules Dynamically](#step-7-manage-rules-dynamically)
+- [Key Takeaways](#key-takeaways)
+- [Recommendations for Future Enhancements](#recommendations-for-future-enhancements)
 
 ---
 
-## **Step 1: Verify Firewall Status**
+## <span style="color:#2b6cb0">Project Overview</span>
 
-Before configuring, verify whether UFW is active and check existing rules.
+This project demonstrates how to configure and manage the **UFW firewall** on Linux to enforce secure inbound and outbound traffic policies.  
 
-**Command:**
-```
+The configuration steps reflect core system administration tasks:
+
+- Setting default deny/allow rules  
+- Opening only necessary services  
+- Managing IPv4 and IPv6 rule sets  
+- Implementing logging for visibility  
+- Validating rule behavior through testing  
+
+These steps build foundational knowledge for secure Linux system hardening.
+
+---
+
+## <span style="color:#2b6cb0">Why This Project Matters</span>
+
+- Reinforces secure system configuration principles  
+- Demonstrates least-privilege network access  
+- Highlights differences between IPv4 and IPv6 firewall behavior  
+- Shows practical firewall rule creation, deletion, and testing  
+- Builds confidence in using UFW for real-world system security  
+
+---
+
+## <span style="color:#2b6cb0">Technologies Used</span>
+
+- **Linux** (Ubuntu-based systems)  
+- **UFW** (Uncomplicated Firewall)  
+- **Bash**  
+- **IPv4 & IPv6**  
+- **ICMP / ping testing**  
+
+---
+
+## <span style="color:#2b6cb0">Objectives</span>
+
+- Configure UFW to enforce secure network boundaries  
+- Set and verify default inbound/outbound policies  
+- Enable and evaluate firewall logging  
+- Manage service-specific rules (HTTP, HTTPS, SSH)  
+- Understand IPv4 vs. IPv6 rule creation  
+- Troubleshoot connectivity using ICMP tools  
+
+---
+
+## <span style="color:#2b6cb0">Key Achievements</span>
+
+- **Configured secure default firewall posture**  
+  *Set “deny incoming” and “allow outgoing” baseline.*
+
+- **Enabled and validated service-specific rules**  
+  *Opened ports 22, 80, 443 without unnecessary duplicates.*
+
+- **Managed duplicate rules efficiently**  
+  *Demonstrated removal of redundant or conflicting entries.*
+
+- **Enabled and reviewed UFW logging**  
+  *Captured allow/deny activity to support troubleshooting.*
+
+- **Differentiated IPv4 and IPv6 rule behavior**  
+  *Ensured complete coverage across both protocols.*
+
+- **Performed successful connectivity and rule validation tests**  
+  *Verified enforcement using ICMP ping and UFW status reports.*
+
+---
+
+## <span style="color:#2b6cb0">Skills Demonstrated</span>
+
+- **Linux System Administration**  
+- **Firewall Configuration & Hardening**  
+- **Traffic Filtering (IPv4 & IPv6)**  
+- **Rule Creation, Deletion, and Management**  
+- **Logging and Visibility Enhancements**  
+- **Troubleshooting Network Connectivity**  
+
+---
+
+## <span style="color:#2b6cb0">Firewall Configuration Walkthrough</span>
+
+---
+
+### <span style="color:#2b6cb0">Step 1: Verify Firewall Status</span>
+
+```bash
 sudo ufw status
 ```
 
-**Output Example:**
+**Example Output:**
 ```
 Status: active
 To                         Action      From
---                         ------      ----
 22/tcp                     ALLOW       Anywhere
 Anywhere                   DENY        192.168.1.100
 22/tcp (v6)                ALLOW       Anywhere (v6)
 ```
 
-- **22/tcp** represents SSH access.  
-- **Anywhere (v6)** entries represent IPv6 rules.  
-- **Anywhere** (without v6) applies to IPv4.
-
 ---
 
-## **Step 2: Configure Default Policies**
+### <span style="color:#2b6cb0">Step 2: Configure Default Policies</span>
 
-Set the default behavior for incoming and outgoing traffic.  
-This ensures a secure baseline for your system.
-
-**Commands:**
-```
+```bash
 sudo ufw default deny incoming
 sudo ufw default allow outgoing
 ```
 
-**Explanation:**
-- **deny incoming** blocks all inbound traffic unless explicitly allowed.  
-- **allow outgoing** permits all outbound traffic from your system.  
-
-These default rules ensure a least-privilege model where only explicitly defined services are exposed.
+Creates a **secure baseline**: inbound traffic blocked unless explicitly allowed.
 
 ---
 
-## **Step 3: Allow Specific Services**
+### <span style="color:#2b6cb0">Step 3: Allow Specific Services</span>
 
-Allow specific ports and services required by your system or applications.
-
-**Commands:**
-```
+```bash
 sudo ufw allow http
 sudo ufw allow https
 sudo ufw allow 80
 sudo ufw allow 443
 ```
 
-**Explanation:**
-- **http (port 80)** enables standard web traffic.  
-- **https (port 443)** enables secure web traffic.  
-- Both `sudo ufw allow http` and `sudo ufw allow 80` achieve the same result — opening port 80.  
-  However, when both commands are run, **UFW creates duplicate entries** in the ruleset because it treats them as two separate additions.
+> **Note:** Running both `allow http` and `allow 80` creates duplicate rules.  
+> Use deletion to clean up:
 
-When checking the status after adding both, you’ll see duplicates:
-```
-To                         Action      From
---                         ------      ----
-80/tcp                     ALLOW   Anywhere
-80                         ALLOW   Anywhere
-80/tcp (v6)                ALLOW   Anywhere (v6)
-80 (v6)                    ALLOW   Anywhere (v6)
-```
-
-To maintain **efficiency and clarity**, unnecessary duplicates can be removed using the delete command:
-
-**Command Example:**
-```
+```bash
 sudo ufw delete allow 80
 ```
 
-This leaves only one active rule for each port.  
-
 ---
 
-## **Step 4: Verify Connectivity**
+### <span style="color:#2b6cb0">Step 4: Verify Connectivity</span>
 
-Test outbound network connectivity by pinging Google’s DNS server to confirm outbound traffic is permitted.
-
-**Command:**
-```
+```bash
 ping -c 4 8.8.8.8
 ```
 
-**Output Example:**
-```
-PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
-64 bytes from 8.8.8.8: icmp_seq=1 ttl=255 time=19.4 ms
-64 bytes from 8.8.8.8: icmp_seq=2 ttl=255 time=19.3 ms
-64 bytes from 8.8.8.8: icmp_seq=3 ttl=255 time=19.2 ms
-64 bytes from 8.8.8.8: icmp_seq=4 ttl=255 time=19.1 ms
-
---- 8.8.8.8 ping statistics ---
-4 packets transmitted, 4 received, 0% packet loss
-```
-
-**Explanation:**
-- Successful replies confirm your **outgoing traffic rules** are working correctly.  
-- If ping fails, you can create a new rule allowing **ICMP** traffic (the protocol used by `ping`).
+Confirms outbound traffic is allowed.
 
 ---
 
-## **Step 5: Enable Firewall Logging**
+### <span style="color:#2b6cb0">Step 5: Enable Firewall Logging</span>
 
-Enable logging to monitor allowed and denied connections.
-
-**Command:**
-```
+```bash
 sudo ufw logging on
 ```
 
-**Explanation:**
-- Enables UFW’s internal logging system.  
-- Logs are stored at **/var/log/ufw.log** for review.  
-- Logging can be disabled with `sudo ufw logging off` if not needed.
+Logs stored at:
+
+```
+/var/log/ufw.log
+```
 
 ---
 
-## **Step 6: Verify Final Configuration**
+### <span style="color:#2b6cb0">Step 6: Verify Final Configuration</span>
 
-After all changes, review your configuration.
-
-**Command:**
-```
+```bash
 sudo ufw status verbose
 ```
 
-**Output Example:**
-```
-Status: active
-Logging: on (low)
-Default: deny (incoming), allow (outgoing), disabled (routed)
-New profiles: skip
+**Checks:**
 
-To                         Action      From
---                         ------      ----
-22/tcp                     ALLOW       Anywhere
-80/tcp                     ALLOW       Anywhere
-443/tcp                    ALLOW       Anywhere
-Anywhere                   DENY        192.168.1.100
-22/tcp (v6)                ALLOW       Anywhere (v6)
-80/tcp (v6)                ALLOW       Anywhere (v6)
-443/tcp (v6)               ALLOW       Anywhere (v6)
-```
-
-**Explanation:**
-- **IPv4 Rules** appear as `Anywhere`.  
-- **IPv6 Rules** appear as `Anywhere (v6)`.  
-- These are not duplicates — they represent separate network protocols.  
-  - IPv4 handles traditional address formats like `192.168.1.10`.  
-  - IPv6 handles newer formats like `2001:db8::1`.  
-- Both rule sets ensure your firewall protects all address families.
-
-Even though `22/tcp` appears twice (once with and once without v6), each applies to a different protocol. Removing one could unintentionally block access from IPv6 hosts.
+- Default inbound/outbound policies  
+- IPv4 & IPv6 rules  
+- Logging level  
+- Any deny/allow rules in effect  
 
 ---
 
-## **Step 7: Managing Rules**
+### <span style="color:#2b6cb0">Step 7: Manage Rules Dynamically</span>
 
-You can **add**, **deny**, or **remove** rules dynamically:
-
-```
+```bash
 sudo ufw allow <port/service>
 sudo ufw deny <port/service>
 sudo ufw delete allow <port/service>
 ```
 
-**Examples:**
-- `sudo ufw deny 23/tcp` blocks Telnet traffic.  
-- `sudo ufw delete allow http` removes the HTTP allow rule.  
+Examples:
 
-These commands provide flexibility to modify firewall behavior without disabling it.
+```bash
+sudo ufw deny 23/tcp
+sudo ufw delete allow http
+```
 
 ---
 
-## **Summary**
+## <span style="color:#2b6cb0">Key Takeaways</span>
 
-This project demonstrated:
-- Setting **default firewall policies** to enforce a secure baseline.  
-- Allowing **specific ports and services** (HTTP, HTTPS, SSH).  
-- Understanding the relationship between **service names** and **port numbers**.  
-- Identifying and removing **duplicate rules** for efficiency.  
-- Differentiating between **IPv4 and IPv6** firewall entries.  
-- Verifying functionality with **ping tests** and enabling **UFW logging** for audit visibility.
+- UFW provides a **simple yet powerful** firewall interface  
+- Default deny/allow rules create a strong security baseline  
+- Duplicate rules can occur (service vs port syntax) and should be managed intentionally  
+- IPv4 and IPv6 rules are created separately and must be handled as such  
+- Logging provides visibility into allow/deny decisions  
+- Connectivity testing is essential for validating configuration changes  
 
-Through these configurations, I successfully secured a Linux system using UFW, ensuring both network accessibility and protection.
+---
+
+## <span style="color:#2b6cb0">Recommendations for Future Enhancements</span>
+
+- Implement **rate limiting** for SSH (e.g., `ufw limit ssh`)  
+- Add **application profiles** under `/etc/ufw/applications.d/`  
+- Explore **nftables** as next-level firewall configuration  
+- Add monitoring using tools like **Fail2Ban**  
+- Test UFW rule conflicts and ordering behavior  
+
+---
+
