@@ -1,4 +1,4 @@
-# **Network & UFW Configuration**
+# **Uncomplicated Firewall & Network Configuration (UFW)**
 
 [![Linux](https://img.shields.io/badge/OS-Linux-blue?logo=linux)](https://www.linux.org/)
 [![UFW](https://img.shields.io/badge/Firewall-UFW-blueviolet)](https://wiki.ubuntu.com/UncomplicatedFirewall)
